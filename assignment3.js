@@ -1,9 +1,16 @@
 //VARIABLE DECLARATION
 let canvas = document.getElementById("myCanvas"); //store reference to canvas element
 let ctx = canvas.getContext("2d"); ////store the 2d rendering context - tool used to paint in canvas
-//
-brickHeight = 10;
-brickWidth = 10;
+
+//We could parse this to get words: http://www.allscrabblewords.com/5-letter-words/
+
+let fiveLetterWords = []
+
+brickHeight = 100;
+brickWidth = 100;
+
+boardBricksVertical = 6;
+boardBricksHorizontal = 6;
 
 //create random int 
 function getRandomInt() {
@@ -16,6 +23,16 @@ function getRandomInt() {
 }
 
 //CLASS DECLARATIONS
+
+class Board {
+    constructor(bricksVertical, bricksHorizontal, word, correctWord) {
+        this._bricksVertical = bricksVertical;
+        this._bricksHorizontal = bricksHorizontal;
+        this._word = word;
+        this._correctWord = correctWord;
+    }
+
+}
 class Brick {
     constructor(height,width,letter,color) {
         this._height = height;
