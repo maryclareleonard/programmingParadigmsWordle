@@ -13,18 +13,35 @@ keyBoardRow3 = 7;
 
 let fiveLetterWords = [ "added","salsa","abode","agent","axles","baker","bagel","cheer",
                         "added","spoon","early","gawks","jeans","lanky","nacho",
-                        "olive","panda","paint","tears","vague","weary","yacht","zones"]
-let brickHeight = 50;
+                        "olive","panda","paint","tears","vague","weary","yacht","zones"];
+
+let brickHeight = 60;
 let brickWidth = brickHeight;
 let brickVerticalPadding = 10;
 let brickHorizontalPadding = 10;
+let defaultBrickLetter = "";
+let defaultBrickColor = "#ffffff";
+let defaultBrickTextColor = "#000000";
+let defaultBrickBorderColor = "#d9d9d9";
+let defaultBrickFont = "25px Arial";
 
-boardBricksVertical = 5;
-boardBricksHorizontal = 6;
-boardWidth = (boardBricksHorizontal*brickWidth);
-boardXPadding = 25;
-boardYPadding = boardXPadding;
-numOfBricks = boardBricksVertical * boardBricksHorizontal;
+let boardBricksVertical = 5;
+let boardBricksHorizontal = 6;
+let boardXPadding = 25;
+let boardWidth = (boardBricksHorizontal * brickWidth) - boardXPadding + (boardBricksHorizontal * brickHorizontalPadding);
+let boardYPadding = boardXPadding;
+let numOfBricks = boardBricksVertical * boardBricksHorizontal;
+let boardHeight = (boardBricksVertical * brickHeight) + boardYPadding + (boardBricksVertical * brickVerticalPadding);
+
+let keyboardBrickHeight = 25;
+let keyboardBrickWidth = keyboardBrickHeight;
+let defaultKeyboardColor = "#d9d9d9";
+let defaultKeyboardTextColor = "#000000";
+let defaultKeyboardBorderColor = "#ffffff";
+let keyboardXPadding = boardXPadding;
+let keyboardYPadding = boardHeight + 150;
+let defaultKeyboardFont = "15px Arial";
+let keyboardRowBuffer = 10; 
 
 //create random int 
 function getRandomInt() {
@@ -49,9 +66,29 @@ class Board {
     getCurrentLine()    { return this._currentLine; }
 
     //setters
-    setBricks()                 { this._bricks = bricks;} //array of bricks
+    setBricks(bricks)           { this._bricks = bricks;} //array of bricks
     setCorrectWord(correctWord) { this._correctWord = correctWord; }
     setCurrentLine(currentLine) { this._currentLine = currentLine; }
+}
+
+class Keyboard {
+    constructor(keyboardBricks) {
+        this._keyboardBricks = keyboardBricks;
+        this.row1Length = 10;           //first row # of letters on qwerty keyboard
+        this.row2Length = 9;            //second row # of letters on qwerty keyboard
+        this.row3Length = 7;            //third row # of letters on qwerty keyboard
+        this.width = keyboardBrickWidth;
+        this.height = keyboardBrickHeight;
+    }
+    //getters
+    getKeyboardBricks() { return this._keyboardBricks; }
+    getRow1Length()     { return this.row1Length; }
+    getRow2Length()     { return this.row2Length; }
+    getRow3Length()     { return this.row3Length; }
+    getWidth()          { return this.width; }
+    getHeight()         { return this.height; }
+    //setters
+    setKeyboardBricks(keyboardBricks) { this._keyBoardBricks = keyboardBricks;} //array of bricks
 }
 
 class Word {
@@ -92,7 +129,7 @@ class Word {
     setCorrectLetter5(correctLetter5)   { this._correctLetter5 = correctLetter5;}
 }
 class Brick {
-    constructor(height,width, letter, color, borderColor, textColor, posX, posY) {
+    constructor(height,width, letter, color, borderColor, textColor, font, posX, posY) {
         this._height = height;
         this._width = width;
         this._posX = posX;
@@ -101,6 +138,7 @@ class Brick {
         this._color = color;
         this._borderColor = borderColor;
         this._textColor = textColor;
+        this._font = font;
     }
     //getters
     getHeight()         { return this._height; }
@@ -111,6 +149,7 @@ class Brick {
     getColor()          { return this._color; }
     getBorderColor()    { return this._borderColor; }  
     getTextColor()      { return this._textColor; }
+    getFont()       { return this._font; }
     //setters
     //don't need setter for Height or Width
     setPosX(posX)               { this._posX = posX; }
@@ -119,28 +158,43 @@ class Brick {
     setColor(color)             { this._color = color; }
     setBorderColor(borderColor) { this._borderColor = borderColor; }
     setTextColor(textColor)     { this._textColor = textColor; }
+    setFont(font)               { this._font = font;}
 }
 
 //create bricks for the board
 //return board 
-function createWorldeBoard() {
+
+function createWordleBoard() {
     board = [];
-    for (let i =0; i < numOfBricks; i++ ){
-        brick = "bricks" + i;
-        iBrick = new Brick(brickHeight, brickWidth,"","#ffffff","#4d4d4d","#000000");
+    for (let i =0; i < numOfBricks; i++){
+        
+        iBrick = new Brick(brickHeight, brickWidth,defaultBrickLetter,defaultBrickColor,defaultBrickBorderColor,defaultBrickTextColor,defaultBrickFont);
         board[i] = iBrick;
     }
     wordleBoard = new Board(board,fiveLetterWords[0],0);
     return wordleBoard;
 }
 
+function createKeyboard() {
+    keyboardBricks = [];
+    for (let i=0; i < keyboardLetterList.length ; i++) {
+        new Brick()
+        keyboardLetter = new Brick(keyboardBrickHeight,keyboardBrickWidth,keyboardLetterList[i],defaultKeyboardColor,defaultKeyboardBorderColor, defaultKeyboardTextColor,defaultKeyboardFont);
+        keyboardBricks[i] = keyboardLetter;
+    }
+    
+    keyboard = new Keyboard(keyboardBricks);//dont need to set the other two parameters
+    return keyboard;
+}
+
 //draws text within brick based on the parameters of this specific instance of the brick class
 function drawText(brick) {
     ctx.beginPath();
     ctx.fillStyle = brick.getTextColor();
-    ctx.font = "25px Arial";
-    textXPos = brick.getPosX() + brickWidth/2;
-    textYPos = brick.getPosY()+ brickHeight/2 + 7; //adding 7 centered it
+    ctx.font = brick.getFont();
+    textXPos = brick.getPosX() + brick.getWidth()/2;
+    textYPos = brick.getPosY() + brick.getHeight()/1.5; 
+    ctx.textAlign = 'center';
     ctx.fillText(brick.getLetter(), textXPos, textYPos);
     ctx.closePath();
 }
@@ -158,13 +212,7 @@ function drawBrick(brick) {
 
 //calculate proper brick positioning
 //returns brick with positions set
-function brickPosition(i,wordleBoard) {
-    brick = "brick" + i;
-    iBrick = wordleBoard.getBricks()[i];
-    
-    /* --------testing purposes --------*/
-    if (i == 0)     { wordleBoard.getBricks()[i].setLetter("M")}
-    else if (i==4)  { wordleBoard.getBricks()[i].setLetter("K")}
+function wordleBrickPosition(i,wordleBoard) {
     /* --------testing purposes --------*/ 
 
     if (i < 5)          { brickRow = 0; }
@@ -173,28 +221,52 @@ function brickPosition(i,wordleBoard) {
     else if (i < 20)    { brickRow = 3; }
     else if (i < 25)    { brickRow = 4; }
     else if (i < 30)    { brickRow = 5; }
-    iBrick.setPosX(boardXPadding + (i*(brickWidth+brickVerticalPadding)) - brickRow * boardWidth);
-    iBrick.setPosY(boardYPadding + (brickRow*(brickHeight+brickHorizontalPadding))); 
-    return iBrick;
+    wordleBoard.getBricks()[i].setPosX(boardXPadding + (i*(brickWidth+brickHorizontalPadding)) - (brickRow * (boardWidth - boardXPadding - 2*brickHorizontalPadding)));
+    wordleBoard.getBricks()[i].setPosY(boardYPadding + (brickRow*(brickHeight+brickVerticalPadding))); 
 }
 
+function keyboardPosition (i,keyboard) {
+    if (i < keyboard.getRow1Length()) { 
+        brickRow = 0; 
+        keyboard.getKeyboardBricks()[i].setPosX(keyboardXPadding + (i*(keyboardBrickWidth+brickHorizontalPadding)));
+    }
+    else if (i < (keyboard.getRow1Length() + keyboard.getRow2Length())) { 
+        brickRow = 1;
+        keyboard.getKeyboardBricks()[i].setPosX(keyboardXPadding + (i*(keyboardBrickWidth+brickHorizontalPadding)) - (keyboard.getRow1Length() * keyboardBrickWidth) - ((keyboard.getRow1Length()-1) * brickHorizontalPadding) + keyboardRowBuffer);
+    }
+    else { 
+        brickRow = 2; 
+        keyboard.getKeyboardBricks()[i].setPosX(keyboardXPadding + (i*(keyboardBrickWidth+brickHorizontalPadding)) - 2*(keyboard.getRow1Length() * keyboardBrickWidth) - ((keyboard.getRow1Length()-1) * brickHorizontalPadding) - 2*keyboardRowBuffer);
+    }
+    
+    keyboard.getKeyboardBricks()[i].setPosY(keyboardYPadding + (brickRow*(keyboardBrickHeight + brickVerticalPadding))); 
+}
+
+
 // gets brick position, draws each brick, then draws the text in each brick
-function drawBoard(wordleBoard) {
-    for (i=0; i < numOfBricks; i++){
-        brick = brickPosition(i,wordleBoard);
-        drawBrick(brick);
-        drawText(brick);
+function drawWordleBoard(wordleBoard) {
+    for (i=0; i < wordleBoard.getBricks().length; i++){
+        wordleBrickPosition(i,wordleBoard);
+        drawBrick(wordleBoard.getBricks()[i]);
+        drawText(wordleBoard.getBricks()[i]);
     }
 }
 
-function drawKeyBoard() {
-
+function drawKeyboard(keyboard) {
+    for (i=0; i < keyboard.getKeyboardBricks().length; i++) {
+        keyboardPosition(i,keyboard);
+        drawBrick(keyboard.getKeyboardBricks()[i]);
+        drawText(keyboard.getKeyboardBricks()[i]);
+    } 
 }
 
 function draw() {
-    wordleBoard = createWorldeBoard();
-    drawBoard(wordleBoard);
-    drawKeyboard();
+    wordleBoard = createWordleBoard();
+    drawWordleBoard(wordleBoard);
+
+    keyboard = createKeyboard();
+    drawKeyboard(keyboard);
+
 
     requestAnimationFrame(draw); // function recalls itself infinitely
     //helps the browser render the game better than the fixed framerate we currently have implemented
