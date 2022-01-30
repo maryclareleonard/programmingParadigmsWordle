@@ -9,13 +9,16 @@ keyboardRow1 = 10;
 keyboardRow2 = 9;
 keyBoardRow3 = 7;
 
+let messageList = ["Incredible!", "Great Job!", "Well done", "Good", "Phew", "Just made it", "Good try"];
+let attemptNum = 0;
+
 //We could parse this to get words: http://www.allscrabblewords.com/5-letter-words/
 
 let fiveLetterWords = [ "added","salsa","abode","agent","axles","baker","bagel","cheer",
                         "added","spoon","early","gawks","jeans","lanky","nacho",
                         "olive","panda","paint","tears","vague","weary","yacht","zones"];
 
-let brickHeight = 60;
+let brickHeight = 35;
 let brickWidth = brickHeight;
 let brickVerticalPadding = 10;
 let brickHorizontalPadding = 10;
@@ -27,9 +30,9 @@ let defaultBrickFont = "25px Arial";
 
 let boardBricksVertical = 5;
 let boardBricksHorizontal = 6;
-let boardXPadding = 25;
+const boardXPadding = 100;
 let boardWidth = (boardBricksHorizontal * brickWidth) - boardXPadding + (boardBricksHorizontal * brickHorizontalPadding);
-let boardYPadding = boardXPadding;
+let boardYPadding = boardXPadding - 75;
 let numOfBricks = boardBricksVertical * boardBricksHorizontal;
 let boardHeight = (boardBricksVertical * brickHeight) + boardYPadding + (boardBricksVertical * brickVerticalPadding);
 
@@ -38,8 +41,8 @@ let keyboardBrickWidth = keyboardBrickHeight;
 let defaultKeyboardColor = "#d9d9d9";
 let defaultKeyboardTextColor = "#000000";
 let defaultKeyboardBorderColor = "#ffffff";
-let keyboardXPadding = boardXPadding;
-let keyboardYPadding = boardHeight + 150;
+let keyboardXPadding = boardXPadding - 40;
+let keyboardYPadding = boardHeight + 80;
 let defaultKeyboardFont = "15px Arial";
 let keyboardRowBuffer = 10; 
 
@@ -210,6 +213,34 @@ function drawBrick(brick) {
     ctx.closePath();
 }
 
+function drawBackspace() {
+		ctx.beginPath();
+    ctx.rect(canvas.width/8, canvas.height - 40, 150, 30);
+    ctx.fillStyle = "#d9d9d9";
+    ctx.fill();
+    ctx.strokeStyle = "white";
+    ctx.stroke();
+    ctx.fillStyle = "#000000";
+    ctx.font = "15px Arial";
+    ctx.textAlign = 'center';
+    ctx.fillText("backspace", canvas.width/8 + 75 , canvas.height - 20);
+    ctx.closePath();
+}
+
+function drawSubmit() {
+		ctx.beginPath();
+    ctx.rect(canvas.width/8 + 210, canvas.height - 40, 150, 30);
+    ctx.fillStyle = "#d9d9d9";
+    ctx.fill();
+    ctx.strokeStyle = "white";
+    ctx.stroke();
+    ctx.fillStyle = "#000000";
+    ctx.font = "15px Arial";
+    ctx.textAlign = 'center';
+    ctx.fillText("submit", canvas.width/8 + 280 , canvas.height - 20);
+    ctx.closePath();
+}
+
 //calculate proper brick positioning
 //returns brick with positions set
 function wordleBrickPosition(i,wordleBoard) {
@@ -254,7 +285,7 @@ function drawWordleBoard(wordleBoard) {
 
 function drawKeyboard(keyboard) {
     for (i=0; i < keyboard.getKeyboardBricks().length; i++) {
-        keyboardPosition(i,keyboard);
+        keyboardPosition(i, keyboard);
         drawBrick(keyboard.getKeyboardBricks()[i]);
         drawText(keyboard.getKeyboardBricks()[i]);
     } 
@@ -266,7 +297,9 @@ function draw() {
 
     keyboard = createKeyboard();
     drawKeyboard(keyboard);
-
+		
+    drawBackspace();
+    drawSubmit();
 
     requestAnimationFrame(draw); // function recalls itself infinitely
     //helps the browser render the game better than the fixed framerate we currently have implemented
