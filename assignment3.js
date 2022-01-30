@@ -3,18 +3,18 @@ let canvas = document.getElementById("myCanvas"); //store reference to canvas el
 let ctx = canvas.getContext("2d"); ////store the 2d rendering context - tool used to paint in canvas
 
 //keyboard parameters
-keyboardLetterList = ["q","w","e","r","t","y","u","i","o","p","a","s","d",
+let keyboardLetterList = ["q","w","e","r","t","y","u","i","o","p","a","s","d",
                       "f","g","h","j","k","l","z","x","c","v","b","n","m"];
-keyboardRow1 = 10;
-keyboardRow2 = 9;
-keyBoardRow3 = 7;
+let keyboardRow1 = 10;
+let keyboardRow2 = 9;
+let keyBoardRow3 = 7;
 
 //We could parse this to get words: http://www.allscrabblewords.com/5-letter-words/
 
 let fiveLetterWords = [ "added","salsa","abode","agent","axles","baker","bagel","cheer",
                         "added","spoon","early","gawks","jeans","lanky","nacho",
                         "olive","panda","paint","tears","vague","weary","yacht","zones"];
-
+//brick variables
 let brickHeight = 60;
 let brickWidth = brickHeight;
 let brickVerticalPadding = 10;
@@ -24,7 +24,7 @@ let defaultBrickColor = "#ffffff";
 let defaultBrickTextColor = "#000000";
 let defaultBrickBorderColor = "#d9d9d9";
 let defaultBrickFont = "25px Arial";
-
+//board variables
 let boardBricksVertical = 5;
 let boardBricksHorizontal = 6;
 let boardXPadding = 25;
@@ -32,7 +32,7 @@ let boardWidth = (boardBricksHorizontal * brickWidth) - boardXPadding + (boardBr
 let boardYPadding = boardXPadding;
 let numOfBricks = boardBricksVertical * boardBricksHorizontal;
 let boardHeight = (boardBricksVertical * brickHeight) + boardYPadding + (boardBricksVertical * brickVerticalPadding);
-
+//keyboard variables
 let keyboardBrickHeight = 25;
 let keyboardBrickWidth = keyboardBrickHeight;
 let defaultKeyboardColor = "#d9d9d9";
@@ -42,6 +42,17 @@ let keyboardXPadding = boardXPadding;
 let keyboardYPadding = boardHeight + 150;
 let defaultKeyboardFont = "15px Arial";
 let keyboardRowBuffer = 10; 
+
+//mouse variables
+let currentX = canvas.width/2;
+let currentY = canvas.height/2;
+let xOffset = 0;
+let yOffset = 0;
+let pressed = false;
+
+//mouse listeners
+canvas.addEventListener("mousedown", dragStart,false);
+canvas.addEventListener("mouseup", dragEnd,false);
 
 //create random int 
 function getRandomInt() {
@@ -55,23 +66,23 @@ function getRandomInt() {
 
 //CLASS DECLARATIONS
 class Board {
-    constructor(bricks, correctWord, currentLine, currentBrick) {
+    constructor(bricks, correctWord, currentLine, currentBrickNumber) {
         this._bricks = bricks;
         this._correctWord = correctWord;
         this._currentLine = currentLine;
-        this._currentBrick = currentBrick;
+        this._currentBrickNumber = currentBrickNumber;
     }
     //getters
     getBricks()         { return this._bricks; }
     getCorrectWord()    { return this._correctWord; }
     getCurrentLine()    { return this._currentLine; }
-    getCurrentBrick()   { return this._currentBrick; }
+    getCurrentBrickNumber()   { return this._currentBrickNumber; }
 
     //setters
-    setBricks(bricks)               { this._bricks = bricks;} //array of bricks
-    setCorrectWord(correctWord)     { this._correctWord = correctWord; }
-    setCurrentLine(currentLine)     { this._currentLine = currentLine; }
-    setCurrentBrick(currentBrick)   { this._currentBrick = currentBrick; }
+    setBricks(bricks)                           { this._bricks = bricks;} //array of bricks
+    setCorrectWord(correctWord)                 { this._correctWord = correctWord; }
+    setCurrentLine(currentLine)                 { this._currentLine = currentLine; }
+    setCurrentBrickNumber(currentBrickNumber)   { this._currentBrickNumber = currentBrickNumber; }
 }
 class Keyboard {
     constructor(keyboardBricks) {
@@ -151,7 +162,7 @@ class Brick {
     getColor()          { return this._color; }
     getBorderColor()    { return this._borderColor; }  
     getTextColor()      { return this._textColor; }
-    getFont()       { return this._font; }
+    getFont()           { return this._font; }
     //setters
     //don't need setter for Height or Width
     setPosX(posX)               { this._posX = posX; }
@@ -165,7 +176,6 @@ class Brick {
 
 //create bricks for the board
 //return board 
-
 function createWordleBoard() {
     board = [];
     for (let i =0; i < numOfBricks; i++){
@@ -173,14 +183,12 @@ function createWordleBoard() {
         iBrick = new Brick(brickHeight, brickWidth,defaultBrickLetter,defaultBrickColor,defaultBrickBorderColor,defaultBrickTextColor,defaultBrickFont);
         board[i] = iBrick;
     }
-    wordleBoard = new Board(board,fiveLetterWords[0],0,board[0]);
+    wordleBoard = new Board(board,fiveLetterWords[0],0,0);
     return wordleBoard;
 }
-
 function createKeyboard() {
     keyboardBricks = [];
     for (let i=0; i < keyboardLetterList.length ; i++) {
-        new Brick()
         keyboardLetter = new Brick(keyboardBrickHeight,keyboardBrickWidth,keyboardLetterList[i],defaultKeyboardColor,defaultKeyboardBorderColor, defaultKeyboardTextColor,defaultKeyboardFont);
         keyboardBricks[i] = keyboardLetter;
     }
@@ -189,6 +197,50 @@ function createKeyboard() {
     return keyboard;
 }
 
+//need to be global for mouse listener
+wordleBoard = createWordleBoard();
+keyboard = createKeyboard();
+
+//functions for mouse listeners
+function dragStart(e) { pressed = false; }
+function dragEnd(e) { 
+    pressed = true; 
+    isClickPointInKeyboard(e.clientX, e.clientY);
+}
+function checkWhichKeypressed(x,y) {
+    for (let i=0; i < keyboard.getKeyboardBricks().length; i++) {
+        leftXBound = keyboard.getKeyboardBricks()[i].getPosX();
+        rightXBound = leftXBound + keyboardBrickWidth;
+
+        topYBound = keyboard.getKeyboardBricks()[i].getPosY();
+        bottomYBound = topYBound + keyboardBrickHeight;
+
+        if( x>=leftXBound && x<=rightXBound ) {
+            if(y>=topYBound && y<=bottomYBound) {
+                keypressLetter = keyboard.getKeyboardBricks()[i].getLetter();
+                wordleBoard.getBricks()[wordleBoard.getCurrentBrickNumber()].setLetter(keypressLetter);
+                //stop at last brick on wordle board
+                if ( wordleBoard.getCurrentBrickNumber() + 1 < (wordleBoard.getBricks().length)) {
+                    wordleBoard.setCurrentBrickNumber(wordleBoard.getCurrentBrickNumber()+1);
+                }
+            }
+        }
+    }
+}
+function isClickPointInKeyboard(x,y) {
+    if (pressed) {
+        leftXBound = keyboard.getKeyboardBricks()[0].getPosX(); //qX
+        rightXBound = keyboard.getKeyboardBricks()[keyboard.getRow1Length()-1].getPosX(); //pX 
+        topYBound = keyboard.getKeyboardBricks()[0].getPosY(); //qY 
+        bottomYBound = keyboard.getKeyboardBricks().at(-1).getPosY(); //mY 
+
+        if (x >= leftXBound && x <= (rightXBound + keyboardBrickWidth + brickHorizontalPadding)) {
+            if (y >= topYBound && y <= (bottomYBound + keyboardBrickHeight)) {
+                checkWhichKeypressed(x,y);
+            }
+        }
+    }
+}
 //draws text within brick based on the parameters of this specific instance of the brick class
 function drawText(brick) {
     ctx.beginPath();
@@ -214,7 +266,7 @@ function drawBrick(brick) {
 
 //calculate proper brick positioning
 //returns brick with positions set
-function wordleBrickPosition(i,wordleBoard) {
+function wordleBrickPosition(i) {
     /* TODO: here is where we can grab current brick and set its letter */
 
     /* --------testing purposes --------
@@ -233,7 +285,7 @@ function wordleBrickPosition(i,wordleBoard) {
     wordleBoard.getBricks()[i].setPosY(boardYPadding + (brickRow*(brickHeight+brickVerticalPadding))); 
 }
 
-function keyboardPosition (i,keyboard) {
+function keyboardPosition (i) {
     if (i < keyboard.getRow1Length()) { 
         brickRow = 0; 
         keyboard.getKeyboardBricks()[i].setPosX(keyboardXPadding + (i*(keyboardBrickWidth+brickHorizontalPadding)));
@@ -252,30 +304,24 @@ function keyboardPosition (i,keyboard) {
 
 
 // gets brick position, draws each brick, then draws the text in each brick
-function drawWordleBoard(wordleBoard) {
+function drawWordleBoard() {
     for (i=0; i < wordleBoard.getBricks().length; i++){
         wordleBrickPosition(i,wordleBoard);
         drawBrick(wordleBoard.getBricks()[i]);
         drawText(wordleBoard.getBricks()[i]);
     }
 }
-
-function drawKeyboard(keyboard) {
+function drawKeyboard() {
     for (i=0; i < keyboard.getKeyboardBricks().length; i++) {
-        keyboardPosition(i,keyboard);
+        keyboardPosition(i);
         drawBrick(keyboard.getKeyboardBricks()[i]);
         drawText(keyboard.getKeyboardBricks()[i]);
     } 
 }
 
 function draw() {
-    wordleBoard = createWordleBoard();
-    drawWordleBoard(wordleBoard);
-
-    keyboard = createKeyboard();
-    drawKeyboard(keyboard);
-    //registerKeyPresses(keyboard);
-    
+    drawWordleBoard();
+    drawKeyboard();
 
     requestAnimationFrame(draw); // function recalls itself infinitely
     //helps the browser render the game better than the fixed framerate we currently have implemented
