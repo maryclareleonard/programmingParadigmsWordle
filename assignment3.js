@@ -55,22 +55,24 @@ function getRandomInt() {
 
 //CLASS DECLARATIONS
 class Board {
-    constructor(bricks, correctWord, currentLine) {
+    constructor(bricks, correctWord, currentLine, currentBrick) {
         this._bricks = bricks;
         this._correctWord = correctWord;
         this._currentLine = currentLine;
+        this._currentBrick = currentBrick;
     }
     //getters
     getBricks()         { return this._bricks; }
     getCorrectWord()    { return this._correctWord; }
     getCurrentLine()    { return this._currentLine; }
+    getCurrentBrick()   { return this._currentBrick; }
 
     //setters
-    setBricks(bricks)           { this._bricks = bricks;} //array of bricks
-    setCorrectWord(correctWord) { this._correctWord = correctWord; }
-    setCurrentLine(currentLine) { this._currentLine = currentLine; }
+    setBricks(bricks)               { this._bricks = bricks;} //array of bricks
+    setCorrectWord(correctWord)     { this._correctWord = correctWord; }
+    setCurrentLine(currentLine)     { this._currentLine = currentLine; }
+    setCurrentBrick(currentBrick)   { this._currentBrick = currentBrick; }
 }
-
 class Keyboard {
     constructor(keyboardBricks) {
         this._keyboardBricks = keyboardBricks;
@@ -171,7 +173,7 @@ function createWordleBoard() {
         iBrick = new Brick(brickHeight, brickWidth,defaultBrickLetter,defaultBrickColor,defaultBrickBorderColor,defaultBrickTextColor,defaultBrickFont);
         board[i] = iBrick;
     }
-    wordleBoard = new Board(board,fiveLetterWords[0],0);
+    wordleBoard = new Board(board,fiveLetterWords[0],0,board[0]);
     return wordleBoard;
 }
 
@@ -213,7 +215,13 @@ function drawBrick(brick) {
 //calculate proper brick positioning
 //returns brick with positions set
 function wordleBrickPosition(i,wordleBoard) {
-    /* --------testing purposes --------*/ 
+    /* TODO: here is where we can grab current brick and set its letter */
+
+    /* --------testing purposes --------
+    if (i == 0)     { wordleBoard.getBricks()[i].setLetter("M")}
+    else if (i==4)  { wordleBoard.getBricks()[i].setLetter("K")}
+    wordleBoard.getCurrentBrick().setLetter("q")
+    --------*/
 
     if (i < 5)          { brickRow = 0; }
     else if (i < 10)    { brickRow = 1; }
@@ -266,7 +274,8 @@ function draw() {
 
     keyboard = createKeyboard();
     drawKeyboard(keyboard);
-
+    //registerKeyPresses(keyboard);
+    
 
     requestAnimationFrame(draw); // function recalls itself infinitely
     //helps the browser render the game better than the fixed framerate we currently have implemented
