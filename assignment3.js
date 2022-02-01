@@ -361,12 +361,14 @@ function isClickPointInKeyboard(x, y) {
                 // Call function to check this word against set word
                 checkWord();
             }
-      } else if((x > (13*keyboardXPadding + 2)) && (x < (13*keyboardXPadding + 2 + keyboardBrickWidth + keyboardXPadding))) { // DELETE
-            wordleBoard.getBricks()[wordleBoard.getCurrentBrickNumber() - 1].setLetter(defaultBrickLetter);
-            if (wordleBoard.getCurrentBrickNumber() - 1 >= 0) {
-                wordleBoard.setCurrentBrickNumber(wordleBoard.getCurrentBrickNumber() - 1);
+	// DELETE
+        } else if ((x > (13 * keyboardXPadding + 2)) && (x < (13 * keyboardXPadding + 2 + keyboardBrickWidth + keyboardXPadding))) {
+            wordleBoard.getBricks()[wordleBoard.getCurrentBrickNumber()].setLetter(defaultBrickLetter);
+            wordleBoard.setCurrentBrickNumber(wordleBoard.getCurrentBrickNumber() - 1);
+            if (wordleBoard.getCurrentBrickNumber() < 0) {
+                wordleBoard.setCurrentBrickNumber(0);
             }
-      }
+       	}
     }
 
   }
