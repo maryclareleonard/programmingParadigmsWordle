@@ -104,6 +104,11 @@ class Board {
   setCurrentBrickNumber(currentBrickNumber) {
     this._currentBrickNumber = currentBrickNumber;
   }
+
+  //method 
+  getStartingBrick() {
+      return this._currentLine*5;
+  }
 }
 class Keyboard {
   constructor(keyboardBricks) {
@@ -363,11 +368,32 @@ function isClickPointInKeyboard(x, y) {
             }
 	// DELETE
         } else if ((x > (13 * keyboardXPadding + 2)) && (x < (13 * keyboardXPadding + 2 + keyboardBrickWidth + keyboardXPadding))) {
-            wordleBoard.getBricks()[wordleBoard.getCurrentBrickNumber()].setLetter(defaultBrickLetter);
-            wordleBoard.setCurrentBrickNumber(wordleBoard.getCurrentBrickNumber() - 1);
-            if (wordleBoard.getCurrentBrickNumber() < 0) {
+            let currentLineStartingBrick = wordleBoard.getStartingBrick()
+            let deleteRequestBrick = wordleBoard.getCurrentBrickNumber()-1;
+            //if try to go outside of first position
+            if (wordleBoard.getCurrentBrickNumber()-1 < 0) {
+                alert("You cannot delete if you have not written to yet!");
                 wordleBoard.setCurrentBrickNumber(0);
             }
+            //if you try to go to the last line
+            else if (deleteRequestBrick < currentLineStartingBrick) {
+                alert("Nice try! You cannot edit your last guess."); 
+            }
+            else {      //past both error conditions so allow change
+                //the brick that we just entered into is one behind currentBrick so change that to defaultBrickLetter (which is empty string)
+                alert(currentLineStartingBrick + 4);
+                alert(wordleBoard.getCurrentBrickNumber())
+                if (wordleBoard.getCurrentBrickNumber()  == (currentLineStartingBrick + 4)) {
+                    alert("here")
+                    wordleBoard.getBricks()[wordleBoard.getCurrentBrickNumber()].setLetter(defaultBrickLetter);
+                    wordleBoard.setCurrentBrickNumber(wordleBoard.getCurrentBrickNumber()); 
+                }
+                else {
+                    wordleBoard.getBricks()[wordleBoard.getCurrentBrickNumber()-1].setLetter(defaultBrickLetter); 
+                    //next write to what we just erased
+                    wordleBoard.setCurrentBrickNumber(wordleBoard.getCurrentBrickNumber() - 1);
+                }
+            }    
        	}
     }
 
@@ -512,9 +538,32 @@ function drawKeyboard() {
   }
 }
 
+function updateCurrentLine() {
+    currentBrick = wordleBoard.getCurrentBrickNumber();
+    if (currentBrick > 0 && currentBrick < 5) {
+        wordleBoard.setCurrentLine(0);
+    }
+    else if (currentBrick >= 5 && currentBrick < 10) {
+        wordleBoard.setCurrentLine(1);
+    }
+    else if (currentBrick >= 10 && currentBrick < 15) {
+        wordleBoard.setCurrentLine(2);
+    }
+    else if (currentBrick >= 15 && currentBrick < 20) {
+        wordleBoard.setCurrentLine(3);
+    }
+    else if (currentBrick >= 20 && currentBrick < 25) {
+        wordleBoard.setCurrentLine(4);
+    }
+    else if (currentBrick >= 25 && currentBrick < 30) {
+        wordleBoard.setCurrentLine(5);
+    }
+}
+
 function draw() {
   drawWordleBoard();
   drawKeyboard();
+  updateCurrentLine();
 
   requestAnimationFrame(draw); // function recalls itself infinitely
   //helps the browser render the game better than the fixed framerate we currently have implemented
