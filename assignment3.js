@@ -53,15 +53,14 @@ let xOffset = 0;
 let yOffset = 0;
 let pressed = false;
 
-const secretWord = "wheat";
 
 //mouse listeners
 canvas.addEventListener("mousedown", dragStart, false);
 canvas.addEventListener("mouseup", dragEnd, false);
 
-//create random int 
+//create random int
 function getRandomInt() {
-    m = Math.random() * 2 + 2; //between 2 and 4 
+    m = Math.random() * 2 + 2; //between 2 and 4
     const d = new Date();
     if (d.getTime() % 2 == 0) { //determine direction based on even/odd millisecond
         m = -1 * m;
@@ -280,9 +279,15 @@ class Brick {
     this._font = font;
   }
 }
+//select secret word
+function selectSecretWord() {
+  let wordOptions = ["aback", "abase", "abate", "abaya", "abbey", "abbot", "abets", "abhor", "abide", "abode", "abort", "about", "above", "abuse", "abuts", "abyss", "ached", "aches", "acids", "acing", "ackee", "acorn", "acres", "acrid", "acted", "actin", "actor", "acute", "adage", "adapt", "added", "adder", "addle", "adept", "adieu", "adios", "adits", "adman", "admin", "admit", "adobe", "adobo", "adopt", "adore", "adorn", "adult", "adzes", "aegis", "aeons", "aerie", "affix", "afire", "afoot", "afore", "after", "again", "agape", "agate", "agave", "agent", "aggro", "agile", "aging", "aglow", "agony", "agora", "agree", "ahead", "ahold", "aided", "aider", "aides", "ailed", "aimed", "aimer", "aioli", "aired", "aisle", "alarm", "album", "alder", "aleph", "alert", "algae", "algal", "alias", "alibi", "alien", "align", "alike", "alive", "alkyd", "alkyl", "allay", "alley", "allot", "allow", "alloy", "allyl", "aloes", "aloft", "aloha", "alone", "along", "aloof", "aloud", "alpha", "altar", "alter", "altos", "alums", "amass", "amaze", "amber", "ambit", "amble", "ambos", "amend", "amide", "amine", "amino", "amiss", "amity", "amnio", "among", "amour", "amped", "ample", "amply", "amuse", "ancho", "angel", "anger", "angle", "angry", "angst", "anima", "anime", "anion", "anise", "ankle", "annas", "annex", "annoy", "annul", "anode", "anole", "antic", "antis", "antsy", "anvil", "aorta", "apace", "apart", "aphid", "apnea", "apple", "apply", "apron", "apses", "apter", "aptly", "aquas", "arbor", "ardor", "areal", "areas", "areca", "arena", "argon", "argot", "argue", "argus", "arias", "arils", "arise", "armed", "armor", "aroma", "arose", "array", "arrow", "arses", "arson", "artsy", "asana", "ascot", "ashen", "ashes", "aside", "asked", "asker", "askew", "aspen", "aspic", "assay", "asses", "asset", "aster", "astir", "asura", "atlas", "atman", "atoll", "atoms", "atone", "atopy", "attic", "audio", "audit", "auger", "aught", "augur", "aunts", "aunty", "aural", "auras", "autos", "auxin", "avail", "avers", "avert", "avian", "avoid", "avows", "await", "awake", "award", "aware", "awash", "awful", "awoke", "axels", "axial", "axils", "axing", "axiom", "axion", "axles", "axons", "azide", "azole", "azure"];
+  let rand = Math.floor(Math.random()*wordOptions.length);
+  const secretWord = wordOptions[rand];
+}
 
 //create bricks for the board
-//return board 
+//return board
 function createWordleBoard() {
   board = [];
   for (let i = 0; i < numOfBricks; i++) {
@@ -343,9 +348,9 @@ function checkWhichKeypressed(x, y) {
 function isClickPointInKeyboard(x, y) {
   if (pressed) {
     leftXBound = keyboard.getKeyboardBricks()[0].getPosX(); //qX
-    rightXBound = keyboard.getKeyboardBricks()[keyboard.getRow1Length() - 1].getPosX(); //pX 
-    topYBound = keyboard.getKeyboardBricks()[0].getPosY(); //qY 
-    bottomYBound = keyboard.getKeyboardBricks().at(-1).getPosY(); //mY 
+    rightXBound = keyboard.getKeyboardBricks()[keyboard.getRow1Length() - 1].getPosX(); //pX
+    topYBound = keyboard.getKeyboardBricks()[0].getPosY(); //qY
+    bottomYBound = keyboard.getKeyboardBricks().at(-1).getPosY(); //mY
 
     if (x >= leftXBound && x <= (rightXBound + keyboardBrickWidth + brickHorizontalPadding)) {
       if (y >= topYBound && y <= (bottomYBound + keyboardBrickHeight)) {
@@ -518,7 +523,7 @@ function draw() {
 
   requestAnimationFrame(draw); // function recalls itself infinitely
   //helps the browser render the game better than the fixed framerate we currently have implemented
-  //draw() being executed again and again within a requestAnimationFrame loop 
+  //draw() being executed again and again within a requestAnimationFrame loop
   //control of framerate is given to browser instead of setting interval for smoother, more efficient loop
 }
 
