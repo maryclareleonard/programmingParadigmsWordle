@@ -1,6 +1,6 @@
 # programmingParadigmsWordle
 
-Four Classes:
+Three Classes:
 
 Board 
 - maintains 
@@ -18,8 +18,6 @@ Keyboard
         - (note there are no setters for these as the QWERTY keyboard has specified row lengths)
     - width, height
     
- Word
- - maintains 5 letters and 5 correct letters to keep track of what is in the bricks to compare what should be in them
  
  Brick 
  - maintains
