@@ -72,4 +72,42 @@ youLost
 - display message
 - stop accepting input
 
+checkWord 
+- check word against correct word and update wordleboard with correct coloring
+
+drawText
+- draw text in Bricks 
+
+drawBrick
+- draw Bricks
+
+wordleBrickPosition
+- calculates positioning for the bricks and sets their PosX and PosY attributes of the Brick class accordingly
+
+keyboardPosition
+- calculates positioning for the bricks and sets their PosX and PosY attributes of the Brick class accordingly
+
+
+drawWordleBoard
+- call wordleBrickPosition so posX and posY set for each brick
+- THEN call drawBrick and drawText
+
+drawBackspace
+- draw backspace button
+
+drawSubmit
+- draw submit button
+
+drawKeyboard
+- call keyboardPosition so posX and posY set for each brick
+- THEN call drawBrick and drawText
+- Then call drawSubmit and drawBackspace
+
+updateCurrentLine
+- called in the repeated draw function so that the currentLine is constantly updated to the wordleBoard class.
+- currentLine of the wordleBoard is used for logic throughout
+
+draw
+- calls drawWordleBoard, drawKeyboard and updateCurrentLine continually so the board is updated with user input
+
 
