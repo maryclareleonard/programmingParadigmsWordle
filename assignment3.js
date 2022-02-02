@@ -87,15 +87,6 @@ let pressed = false;
 canvas.addEventListener("mousedown", dragStart, false);
 canvas.addEventListener("mouseup", dragEnd, false);
 
-//create random int
-/*function getRandomInt() {
-    m = Math.random() * 2 + 2; //between 2 and 4
-    const d = new Date();
-    if (d.getTime() % 2 == 0) { //determine direction based on even/odd millisecond
-        m = -1 * m;
-    }
-    return m;
-}*/
 
 //CLASS DECLARATIONS
 class Board {
@@ -170,84 +161,6 @@ class Keyboard {
   setKeyboardBricks(keyboardBricks) {
     this._keyBoardBricks = keyboardBricks;
   } //array of bricks
-}
-
-class Word {
-  constructor(letter1, correctLetter1, letter2, correctLetter2, letter3, correctLetter3, letter4, correctLetter4, letter5, correctLetter5) {
-    this._letter1 = letter1;
-    this._letter2 = letter2;
-    this._letter3 = letter3;
-    this._letter4 = letter4;
-    this._letter5 = letter5;
-    this._correctLetter1 = correctLetter1;
-    this._correctLetter2 = correctLetter2;
-    this._correctLetter3 = correctLetter3;
-    this._correctLetter4 = correctLetter4;
-    this._correctLetter5 = correctLetter5;
-  }
-  //getters
-  getLetter1() {
-    return this._letter1;
-  }
-  getLetter2() {
-    return this._letter2;
-  }
-  getLetter3() {
-    return this._letter3;
-  }
-  getLetter4() {
-    return this._letter4;
-  }
-  getLetter5() {
-    return this._letter5;
-  }
-  getCorrectLetter1() {
-    return this._correctLetter1;
-  }
-  getCorrectLetter2() {
-    return this._correctLetter2;
-  }
-  getCorrectLetter3() {
-    return this._correctLetter3;
-  }
-  getCorrectLetter4() {
-    return this._correctLetter4;
-  }
-  getCorrectLetter5() {
-    return this._correctLetter5;
-  }
-
-  //setters
-  setLetter1(letter1) {
-    this._letter1 = letter1;
-  }
-  setLetter2(letter2) {
-    this._letter2 = letter2;
-  }
-  setLetter3(letter3) {
-    this._letter3 = letter3;
-  }
-  setLetter4(letter4) {
-    this._letter4 = letter4;
-  }
-  setLetter5(letter5) {
-    this._letter5 = letter5;
-  }
-  setCorrectLetter1(correctLetter1) {
-    this._correctLetter1 = correctLetter1;
-  }
-  setCorrectLetter2(CorrectLetter2) {
-    this._correctLetter2 = correctLetter2;
-  }
-  setCorrectLetter3(correctLetter3) {
-    this._correctLetter3 = correctLetter3;
-  }
-  setCorrectLetter4(correctLetter4) {
-    this._correctLetter4 = correctLetter4;
-  }
-  setCorrectLetter5(correctLetter5) {
-    this._correctLetter5 = correctLetter5;
-  }
 }
 class Brick {
   constructor(height, width, letter, color, borderColor, textColor, font, posX, posY) {
@@ -345,7 +258,6 @@ function createKeyboard() {
 }
 
 const secretWord = selectSecretWord();
-
 //need to be global for mouse listener
 wordleBoard = createWordleBoard();
 keyboard = createKeyboard();
