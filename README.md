@@ -29,5 +29,47 @@ Keyboard
     - color (of the background of the brick)
     - borderColor, textColor, Font 
         - (these were important as we use the same bricks for the Board and Keyboard classes)
+
+
+
+Functions:
+
+selectSecretWord
+-  selects the secret word randomly from list given on assignment sheet
+
+createWordleBoard
+- create Bricks to fill Board
+- wordleBoard created with array of these new Bricks
+
+createKeyBoard
+- create Bricks to fill Keyboard
+- keyboard created with array of these new Bricks
         
+dragStart and dragEnd 
+- mouse listeners to get keyboard presses
+
+checkWhichKeyPressed
+- is called by isClickPointInKeyboard (therefore we know mouse press is within keyboard) 
+    - less checking than if we look on every mouse press
+- based on the bounds of each keyboard piece - finds which key user was pressing on and set the current brick on the wordleboard to have that letter
  
+isClickPointInKeyBoard
+- uses bounds of keyboard pieces q, p, and m (a few of the extremeties) to find if mouse press is within bounds of keyboard
+- determines if enter pressed
+    - check if word in word list - if so then calls checkWord
+- determines if delete pressed 
+    - edge cases so you get error messages if you try to delete when nothing at position 0 AND if you try to delete part of your last guess
+    - handles deleting the currentbrick characters but only in that word!
+
+wordInList
+- check if word in our list of options so user is not guessing invalid words
+
+youWon
+- display message based on line 
+- stop accepting input
+
+youLost
+- display message
+- stop accepting input
+
+
