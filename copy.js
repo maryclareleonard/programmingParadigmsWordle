@@ -12,10 +12,10 @@ let keyBoardRow3 = 7;
 
 //We could parse this to get words: http://www.allscrabblewords.com/5-letter-words/
 
-let fiveLetterWords = ["added", "salsa", "abode", "agent", "axles", "baker", "bagel", "cheer",
+/*let fiveLetterWords = ["added", "salsa", "abode", "agent", "axles", "baker", "bagel", "cheer",
   "added", "spoon", "early", "gawks", "jeans", "lanky", "nacho",
   "olive", "panda", "paint", "tears", "vague", "weary", "yacht", "zones"
-];
+];*/
 
 let wordOptions = ["aback", "abase", "abate", "abaya", "abbey", "abbot", "abets", "abhor", 
 "abide", "abode", "abort", "about", "above", "abuse", "abuts", "abyss", "ached", "aches", 
@@ -82,20 +82,21 @@ let xOffset = 0;
 let yOffset = 0;
 let pressed = false;
 
+//const secretWord = "wheat";
 
 //mouse listeners
 canvas.addEventListener("mousedown", dragStart, false);
 canvas.addEventListener("mouseup", dragEnd, false);
 
-//create random int
-/*function getRandomInt() {
-    m = Math.random() * 2 + 2; //between 2 and 4
+//create random int 
+function getRandomInt() {
+    m = Math.random() * 2 + 2; //between 2 and 4 
     const d = new Date();
     if (d.getTime() % 2 == 0) { //determine direction based on even/odd millisecond
         m = -1 * m;
     }
     return m;
-}*/
+}
 
 //CLASS DECLARATIONS
 class Board {
@@ -135,8 +136,8 @@ class Board {
 
   //method 
   getStartingBrick() {
-    return this._currentLine*5;
-}
+      return this._currentLine*5;
+  }
 }
 class Keyboard {
   constructor(keyboardBricks) {
@@ -315,13 +316,16 @@ class Brick {
 }
 //select secret word
 function selectSecretWord() {
+  let wordOptions = ["aback", "abase", "abate", "abaya", "abbey", "abbot", "abets", "abhor", "abide", "abode", "abort", "about", "above", "abuse", "abuts", "abyss", "ached", "aches", "acids", "acing", "ackee", "acorn", "acres", "acrid", "acted", "actin", "actor", "acute", "adage", "adapt", "added", "adder", "addle", "adept", "adieu", "adios", "adits", "adman", "admin", "admit", "adobe", "adobo", "adopt", "adore", "adorn", "adult", "adzes", "aegis", "aeons", "aerie", "affix", "afire", "afoot", "afore", "after", "again", "agape", "agate", "agave", "agent", "aggro", "agile", "aging", "aglow", "agony", "agora", "agree", "ahead", "ahold", "aided", "aider", "aides", "ailed", "aimed", "aimer", "aioli", "aired", "aisle", "alarm", "album", "alder", "aleph", "alert", "algae", "algal", "alias", "alibi", "alien", "align", "alike", "alive", "alkyd", "alkyl", "allay", "alley", "allot", "allow", "alloy", "allyl", "aloes", "aloft", "aloha", "alone", "along", "aloof", "aloud", "alpha", "altar", "alter", "altos", "alums", "amass", "amaze", "amber", "ambit", "amble", "ambos", "amend", "amide", "amine", "amino", "amiss", "amity", "amnio", "among", "amour", "amped", "ample", "amply", "amuse", "ancho", "angel", "anger", "angle", "angry", "angst", "anima", "anime", "anion", "anise", "ankle", "annas", "annex", "annoy", "annul", "anode", "anole", "antic", "antis", "antsy", "anvil", "aorta", "apace", "apart", "aphid", "apnea", "apple", "apply", "apron", "apses", "apter", "aptly", "aquas", "arbor", "ardor", "areal", "areas", "areca", "arena", "argon", "argot", "argue", "argus", "arias", "arils", "arise", "armed", "armor", "aroma", "arose", "array", "arrow", "arses", "arson", "artsy", "asana", "ascot", "ashen", "ashes", "aside", "asked", "asker", "askew", "aspen", "aspic", "assay", "asses", "asset", "aster", "astir", "asura", "atlas", "atman", "atoll", "atoms", "atone", "atopy", "attic", "audio", "audit", "auger", "aught", "augur", "aunts", "aunty", "aural", "auras", "autos", "auxin", "avail", "avers", "avert", "avian", "avoid", "avows", "await", "awake", "award", "aware", "awash", "awful", "awoke", "axels", "axial", "axils", "axing", "axiom", "axion", "axles", "axons", "azide", "azole", "azure"];
   let rand = Math.floor(Math.random()*wordOptions.length);
   const secretWord = wordOptions[rand];
   return secretWord;
 }
 
+
+
 //create bricks for the board
-//return board
+//return board 
 function createWordleBoard() {
   board = [];
   for (let i = 0; i < numOfBricks; i++) {
@@ -343,8 +347,6 @@ function createKeyboard() {
   keyboard = new Keyboard(keyboardBricks); //dont need to set the other two parameters
   return keyboard;
 }
-
-const secretWord = selectSecretWord();
 
 //need to be global for mouse listener
 wordleBoard = createWordleBoard();
@@ -372,7 +374,6 @@ function checkWhichKeypressed(x, y) {
       if (y >= topYBound && y <= bottomYBound) {
         keypressLetter = keyboard.getKeyboardBricks()[i].getLetter();
         wordleBoard.getBricks()[wordleBoard.getCurrentBrickNumber()].setLetter(keypressLetter);
-        justDeleted = 0;
         //stop at last brick on wordle board
         if ((wordleBoard.getCurrentBrickNumber() + 1 < (wordleBoard.getBricks().length)) && (wordleBoard.getCurrentBrickNumber() + 1)%5) {
           wordleBoard.setCurrentBrickNumber(wordleBoard.getCurrentBrickNumber() + 1);
@@ -385,9 +386,9 @@ function checkWhichKeypressed(x, y) {
 function isClickPointInKeyboard(x, y) {
   if (pressed) {
     leftXBound = keyboard.getKeyboardBricks()[0].getPosX(); //qX
-    rightXBound = keyboard.getKeyboardBricks()[keyboard.getRow1Length() - 1].getPosX(); //pX
-    topYBound = keyboard.getKeyboardBricks()[0].getPosY(); //qY
-    bottomYBound = keyboard.getKeyboardBricks().at(-1).getPosY(); //mY
+    rightXBound = keyboard.getKeyboardBricks()[keyboard.getRow1Length() - 1].getPosX(); //pX 
+    topYBound = keyboard.getKeyboardBricks()[0].getPosY(); //qY 
+    bottomYBound = keyboard.getKeyboardBricks().at(-1).getPosY(); //mY 
 
     if (x >= leftXBound && x <= (rightXBound + keyboardBrickWidth + brickHorizontalPadding)) {
       if (y >= topYBound && y <= (bottomYBound + keyboardBrickHeight)) {
@@ -401,15 +402,7 @@ function isClickPointInKeyboard(x, y) {
         if ((x > keyboardXPadding - 8) && (x < (keyboardXPadding - 8 + keyboardBrickWidth + keyboardXPadding))) {
             if (!((wordleBoard.getCurrentBrickNumber() + 1) % 5)) {
                 // Call function to check this word against set word
-                if (wordInList()) {
-                  checkWord();
-                }
-                else {
-                  alert("That word is not in our word list.")
-                }
-            }
-            else {
-              alert("Enter a five letter word.")
+                checkWord();
             }
 	    // DELETE
         } else if ((x > (13 * keyboardXPadding + 2)) && (x < (13 * keyboardXPadding + 2 + keyboardBrickWidth + keyboardXPadding))) {
@@ -426,57 +419,28 @@ function isClickPointInKeyboard(x, y) {
             }
             else {      //past both error conditions so allow change
                 //the brick that we just entered into is one behind currentBrick so change that to defaultBrickLetter (which is empty string)
-                if ( ((wordleBoard.getCurrentBrickNumber() + 1) % 5) || justDeleted ==1) {
-                    wordleBoard.setCurrentBrickNumber(wordleBoard.getCurrentBrickNumber() - 1);
-                    wordleBoard.getBricks()[wordleBoard.getCurrentBrickNumber()].setLetter(defaultBrickLetter);  
-
-                    justDeleted = 0;
+                alert(currentLineStartingBrick + 4);
+                alert(wordleBoard.getCurrentBrickNumber())
+                if (wordleBoard.getCurrentBrickNumber()  == (currentLineStartingBrick + 4)) {
+                    alert("here")     
+                    
+                    wordleBoard.getBricks()[wordleBoard.getCurrentBrickNumber()].setLetter(defaultBrickLetter);
+                    wordleBoard.setCurrentBrickNumber(wordleBoard.getCurrentBrickNumber()); 
                 }
                 else {
-                    wordleBoard.getBricks()[wordleBoard.getCurrentBrickNumber()].setLetter(defaultBrickLetter);
-                    justDeleted = 1;
+                    wordleBoard.getBricks()[wordleBoard.getCurrentBrickNumber()-1].setLetter(defaultBrickLetter); 
+                    //next write to what we just erased
+                    wordleBoard.setCurrentBrickNumber(wordleBoard.getCurrentBrickNumber() - 1);
                 }
             }    
        	}
     }
-
   }
-}
-// Checks that the submitted word is in the accepted word list
-function wordInList() {
-  let currBrick = wordleBoard.getCurrentBrickNumber() - 4;
-  let userWord = wordleBoard.getBricks()[currBrick + 0].getLetter() + wordleBoard.getBricks()[currBrick + 1].getLetter() + wordleBoard.getBricks()[currBrick + 2].getLetter() + wordleBoard.getBricks()[currBrick + 3].getLetter() + wordleBoard.getBricks()[currBrick + 4].getLetter();
-
-  if (wordOptions.includes(userWord)) {
-      return 1;
-  } else {
-      return 0;
-  }
-}
-
-function youWon() {
-  //messsage based on line number
-  if (wordleBoard.getCurrentLine() == 0)        { alert("Wow Superstar. On the first try!?!") }
-  else if (wordleBoard.getCurrentLine() == 1)   { alert("Impressive work!!") }
-  else if (wordleBoard.getCurrentLine() == 2)   { alert("Third time is the charm.") }
-  else if (wordleBoard.getCurrentLine() == 3)   { alert("Four Tries is respectable.") }
-  else if (wordleBoard.getCurrentLine() == 4)   { alert("Just got it.") }
-  else if (wordleBoard.getCurrentLine() == 5)   { alert("Last but not least.") }
-  //no longer allow input
-  wordleBoard.setCurrentBrickNumber(31);
-  exit(1);
-}
-function youLost() {
-  alert("Sorry you lost :-( ")
-  //no longer allow input
-  wordleBoard.setCurrentBrickNumber(31);
-  exit(1);
 }
 
 // checks the submitted word against the accepted word
-    function checkWord() {
+function checkWord() {
         let letterIndex = 0;
-        let greenBricks = 0;
         let currBrick = wordleBoard.getCurrentBrickNumber() - 4;
         let userWord = wordleBoard.getBricks()[currBrick + 0].getLetter() + wordleBoard.getBricks()[currBrick + 1].getLetter() + wordleBoard.getBricks()[currBrick + 2].getLetter() + wordleBoard.getBricks()[currBrick + 3].getLetter() + wordleBoard.getBricks()[currBrick + 4].getLetter();
         // Check user inputted word against the correct word and update the wordle board
@@ -492,14 +456,7 @@ function youLost() {
             if (secretWord[i] == userWord[i]) {
                 wordleBoard.getBricks()[currBrick + i].setColor("#98FB98");
                 keyboard.getKeyboardBricks()[letterIndex].setColor("#98FB98");
-                greenBricks++;
             }
-        }
-        if (greenBricks == 5) { 
-          youWon();
-        }
-        else if (greenBricks != 5 && wordleBoard.getCurrentLine() == 5 ) {
-          youLost();
         }
         wordleBoard.setCurrentBrickNumber(wordleBoard.getCurrentBrickNumber() + 1);
 }
@@ -530,14 +487,6 @@ function drawBrick(brick) {
 //calculate proper brick positioning
 //returns brick with positions set
 function wordleBrickPosition(i) {
-  /* TODO: here is where we can grab current brick and set its letter */
-
-  /* --------testing purposes --------
-  if (i == 0)     { wordleBoard.getBricks()[i].setLetter("M")}
-  else if (i==4)  { wordleBoard.getBricks()[i].setLetter("K")}
-  wordleBoard.getCurrentBrick().setLetter("q")
-  --------*/
-
   if (i < 5) {
     brickRow = 0;
   } else if (i < 10) {
@@ -620,43 +569,37 @@ function drawKeyboard() {
   }
 }
 
-//update current line for wordle board
 function updateCurrentLine() {
-  currentBrick = wordleBoard.getCurrentBrickNumber();
-  if (currentBrick > 0 && currentBrick < 5) {
-      wordleBoard.setCurrentLine(0);
-  }
-  else if (currentBrick >= 5 && currentBrick < 10) {
-      wordleBoard.setCurrentLine(1);
-  }
-  else if (currentBrick >= 10 && currentBrick < 15) {
-      wordleBoard.setCurrentLine(2);
-  }
-  else if (currentBrick >= 15 && currentBrick < 20) {
-      wordleBoard.setCurrentLine(3);
-  }
-  else if (currentBrick >= 20 && currentBrick < 25) {
-      wordleBoard.setCurrentLine(4);
-  }
-  else if (currentBrick >= 25 && currentBrick < 30) {
-      wordleBoard.setCurrentLine(5);
-  }
-  else { 
-    wordleBoard.setCurrentLine(6);
-  }
+    currentBrick = wordleBoard.getCurrentBrickNumber();
+    if (currentBrick > 0 && currentBrick < 5) {
+        wordleBoard.setCurrentLine(0);
+    }
+    else if (currentBrick >= 5 && currentBrick < 10) {
+        wordleBoard.setCurrentLine(1);
+    }
+    else if (currentBrick >= 10 && currentBrick < 15) {
+        wordleBoard.setCurrentLine(2);
+    }
+    else if (currentBrick >= 15 && currentBrick < 20) {
+        wordleBoard.setCurrentLine(3);
+    }
+    else if (currentBrick >= 20 && currentBrick < 25) {
+        wordleBoard.setCurrentLine(4);
+    }
+    else if (currentBrick >= 25 && currentBrick < 30) {
+        wordleBoard.setCurrentLine(5);
+    }
 }
 
 function draw() {
   drawWordleBoard();
   drawKeyboard();
   updateCurrentLine();
-  
 
   requestAnimationFrame(draw); // function recalls itself infinitely
   //helps the browser render the game better than the fixed framerate we currently have implemented
-  //draw() being executed again and again within a requestAnimationFrame loop
+  //draw() being executed again and again within a requestAnimationFrame loop 
   //control of framerate is given to browser instead of setting interval for smoother, more efficient loop
 }
 
 draw();
-alert("For purposes of testing, our word is " + secretWord + ".")
